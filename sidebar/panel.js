@@ -1,7 +1,7 @@
 var myWindowId, pocketuser, pocket_access_token, pocket_consumer_token, 
   ga_uuid, ga_property, ga_visitor, mute_state, help_visible;
 
-var port = browser.runtime.connectNative("foxycli");
+var port = browser.runtime.connectNative('foxycli');
 console.log('CONNECT NATIVE CALLED');
 
 /*
@@ -9,21 +9,21 @@ Listen for messages from the app.
 */
 port.onMessage.addListener((response) => {
   console.log('RECEIVED APP MESSAGE');
-  console.log("Received: " + JSON.stringify(response));
+  console.log('Received: ' + JSON.stringify(response));
   
   var sidebar = getSidebar();
   var iDiv = sidebar.createElement('div');
   
   // Attach the icon for the card.
   var icon = document.createElement('img');
-  icon.style['margin-top']="3px";
-  icon.style['margin-left']="3px";
+  icon.style['margin-top']='3px';
+  icon.style['margin-left']='3px';
   icon.height = 16;
   icon.width = 16;
 
   // Create the Speech text
   var text = document.createElement('span');
-  text.setAttribute("class","speechtext");
+  text.setAttribute('class','speechtext');
   text.textContent = response.utterance;
 
   let ID;
@@ -52,10 +52,10 @@ port.onMessage.addListener((response) => {
       iframe.className = 'panel-item-frame';
 
       if (response.param2) {
-        iframe.setAttribute("src", '/sidebar/paneltimer.html?duration='
+        iframe.setAttribute('src', '/sidebar/paneltimer.html?duration='
           + response.param + '&tag=' + response.param2);
       } else {
-        iframe.setAttribute("src", '/sidebar/paneltimer.html?duration='
+        iframe.setAttribute('src', '/sidebar/paneltimer.html?duration='
           + response.param);
       }
       break;
@@ -71,14 +71,14 @@ port.onMessage.addListener((response) => {
       icon = '';
       text = '';
       iDiv.innerHTML = template;
-      iDiv.className = "spotifycardiv panel-item";
+      iDiv.className = 'spotifycardiv panel-item';
 
       var iframe = sidebar.createElement('iframe');
-      iframe.setAttribute("src", '/sidebar/spotify.html?playlist=' + response.param);
+      iframe.setAttribute('src', '/sidebar/spotify.html?playlist=' + response.param);
       iframe.width = 300;
       iframe.height = 100;
       iframe.frameBorder = 0;
-      iframe.scrolling = "no";
+      iframe.scrolling = 'no';
       break;
     case 'WEATHER':
       ID = 'weathercardiv';
@@ -101,25 +101,25 @@ port.onMessage.addListener((response) => {
       var iframe = sidebar.createElement('iframe');
       iframe.frameBorder=0;
       iframe.width = 300;
-      iframe.setAttribute("src", '/sidebar/panelweather.html?city='
+      iframe.setAttribute('src', '/sidebar/panelweather.html?city='
         + response.param + '&weather=' + response.param5 + '&temp=' +
         + response.param2 + '&min=' + response.param3 + '&max=' +
         + response.param4 + '&description=' + response.param5
         + '&time=' + localTime.time + '&day=' + localTime.day);
       break;
     case 'IOT':
-      iDiv.className = "iotcardiv";
+      iDiv.className = 'iotcardiv';
       if(response.param2 == 'on') {
         // iDiv.style.backgroundImage = "url('resources/sunburst.png')";
       }
 
-      icon.src = "./resources/foxyhome.svg";
+      icon.src = './resources/foxyhome.svg';
 
       var iframe = sidebar.createElement('iframe');
       iframe.frameBorder=0;
       iframe.width = 300;
       iframe.height = 185;
-      iframe.setAttribute("src", '/sidebar/paneliot.html?room='
+      iframe.setAttribute('src', '/sidebar/paneliot.html?room='
         + response.param + '&onoff=' + response.param2);
       break;
     case 'POCKET':
@@ -135,7 +135,7 @@ port.onMessage.addListener((response) => {
       icon = '';
       text = '';
       iDiv.innerHTML = template;
-      iDiv.className = "pocketcardiv panel-item";
+      iDiv.className = 'pocketcardiv panel-item';
      // icon.src = './resources/get_pocket1600.png';
       var iframe = sidebar.createElement('iframe');
       iframe.setAttribute('onload', 'resizeIframe(this)');
@@ -147,7 +147,7 @@ port.onMessage.addListener((response) => {
         .then((tabs) => {
           port.postMessage(tabs[0].url);
           console.log('Before passing: ' + tabs[0].url);
-          iframe.setAttribute("src", '/sidebar/panelpocket.html?title=' +
+          iframe.setAttribute('src', '/sidebar/panelpocket.html?title=' +
             tabs[0].title + '&source=' + tabs[0].url);
         });
       break;
@@ -163,12 +163,12 @@ port.onMessage.addListener((response) => {
       icon = '';
       text = '';
       iDiv.innerHTML = template;
-      iDiv.className = "nprcardiv panel-item";
+      iDiv.className = 'nprcardiv panel-item';
 
       var iframe = sidebar.createElement('iframe');
       iframe.frameBorder=0;
       iframe.width = 300;
-      iframe.setAttribute("src", '/sidebar/panelnpr.html');
+      iframe.setAttribute('src', '/sidebar/panelnpr.html');
       break;
     case 'GA':
       console.log('got GA request!!!');
@@ -195,7 +195,7 @@ port.onMessage.addListener((response) => {
       var iframe = sidebar.createElement('iframe');
       iframe.frameBorder=0;
       iframe.width = 300;
-      iframe.setAttribute("src", '/sidebar/panelfeedback.html');
+      iframe.setAttribute('src', '/sidebar/panelfeedback.html');
       break;
     default: //This is also 'NONE'. If we add another, may need to break it out
     template = `
@@ -205,14 +205,14 @@ port.onMessage.addListener((response) => {
     <a href="/" class="panel-item-close"><img src="resources/close-16.svg" alt="" style="float: right"></a>
     </div>
     `;
-      iDiv.className = "confusedcardiv panel-item";
+      iDiv.className = 'confusedcardiv panel-item';
       iDiv.innerHTML = template;
       text.textContent = response.utterance.replace(/['"]+/g, '');
 
       var iframe = sidebar.createElement('iframe');
       iframe.frameBorder=0;
       iframe.width = '99%';
-      iframe.setAttribute("src", '/sidebar/panelconfused.html?text='
+      iframe.setAttribute('src', '/sidebar/panelconfused.html?text='
         + response.utterance);
       icon = '';
       text = '';
@@ -307,40 +307,41 @@ function deleteCard(node) {
 
 function showHelp(help_visible) {
   if (help_visible) {
-  var template = `
-  <div class="panel-item-header">
-    <h4 style ="margin: 0px;">Here are some things you can say to Foxy:</h4>
-    <a href="/" class="panel-item-close"><img src="resources/close-16.svg" alt=""></a>
-  </div>
-`;
-var sidebar = getSidebar();
-var iDiv = sidebar.createElement('div');
-iDiv.innerHTML = template;
-iDiv.className = 'helpcardiv panel-item';
-var iframe = sidebar.createElement('iframe');
-iframe.setAttribute("src", '/sidebar/panelhelp.html');
-iframe.frameBorder=0;
-iframe.width = '99%';
-iframe.height = '100%';
-iDiv.appendChild(iframe);
-var tb = sidebar.getElementById('toolbar');
-var firstCard = tb.nextSibling;
-if (firstCard) {
-  var insertedNode = sidebar.body.insertBefore(iDiv, firstCard);
-} else {
-  sidebar.body.appendChild(iDiv);
-}
-var closeButton = iDiv.querySelector('.panel-item-close');
-if (closeButton) {
-  closeButton.addEventListener('click', function(e) {    
-    e.preventDefault();   
-    deleteCard(iDiv);
-    window.help_visible = false;
-  }, false);
-};
+    var template = `
+    <div class="panel-item-header">
+      <h4 style ="margin: 0px;">Here are some things you can say to Foxy:</h4>
+      <a href="/" class="panel-item-close"><img src="resources/close-16.svg" 
+      alt=""></a>
+    </div>
+  `;
+    var sidebar = getSidebar();
+    var iDiv = sidebar.createElement('div');
+    iDiv.innerHTML = template;
+    iDiv.className = 'helpcardiv panel-item';
+    var iframe = sidebar.createElement('iframe');
+    iframe.setAttribute('src', '/sidebar/panelhelp.html');
+    iframe.frameBorder=0;
+    iframe.width = '99%';
+    iframe.height = '280px';
+    iDiv.appendChild(iframe);
+    var tb = sidebar.getElementById('toolbar');
+    var firstCard = tb.nextSibling;
+    if (firstCard) {
+      sidebar.body.insertBefore(iDiv, firstCard);
+    } else {
+      sidebar.body.appendChild(iDiv);
+    }
+    var closeButton = iDiv.querySelector('.panel-item-close');
+    if (closeButton) {
+      closeButton.addEventListener('click', function(e) {    
+        e.preventDefault();   
+        deleteCard(iDiv);
+        window.help_visible = false;
+      }, false);
+    }
 } else {
   deleteCard(getSidebar().querySelector('.helpcardiv'));
-}};
+}}
 
 /*
 When the sidebar loads, get the ID of its window,
@@ -365,9 +366,9 @@ browser.windows.getCurrent({populate: true}).then((windowInfo) => {
   var muteBtn = sidebar.getElementById('mute_button');
   muteBtn.addEventListener('click', function() {
     if (!mute_state) {
-      muteBtn.style.backgroundImage = "url('resources/unmute.png')";
+      muteBtn.style.backgroundImage = 'url(\'resources/unmute.png\')';
     } else {
-      muteBtn.style.backgroundImage = "url('resources/mute.png')";
+      muteBtn.style.backgroundImage = 'url(\'resources/mute.png\')';
     }
     mute_state = !mute_state;
     console.log('mute button pushed');
